@@ -7,16 +7,14 @@ namespace ItemSpace
 {
     public class ItemList : MonoBehaviour
     {
-        //아이템 목록
-        [SerializeField] private Dictionary<string, GameObject> ShortWeapon;
-        [SerializeField] private Dictionary<string, GameObject> LongWeapon;
+        //아이템 목록, 무기는 장착중인 것 넣어야한다.
+        public GameObject Sword;
+        public GameObject Gun;
         [SerializeField] private Dictionary<string, UMATextRecipe> Shoes;
         [SerializeField] private Dictionary<string, UMATextRecipe> Top;
         [SerializeField] private Dictionary<string, UMATextRecipe> Bottoms;
         private void Awake()
         {
-            Init_ShortWeapon();
-            Init_LongWeapon();
             Init_Shoes();
             Init_Top();
             Init_Bottoms();
@@ -34,27 +32,16 @@ namespace ItemSpace
 
         private void Init_Shoes()
         {
-            Top.Add("Boots", Resources.Load<UMATextRecipe>("Top/Shirts"));
+            Top.Add("Boots", Resources.Load<UMATextRecipe>("Shoes/Boots"));
         }
-
-        private void Init_LongWeapon()
-        {
-            LongWeapon.Add("Gun",Resources.Load<GameObject>("LongWeapon/Gun"));
-        }
-
-        private void Init_ShortWeapon()
-        {
-            ShortWeapon.Add("Sword",Resources.Load<GameObject>("ShortWeapon/Sword"));
-        }
-
         public Item Get(string _name)
         {
             switch (_name)
             {
                 case "Sword":
-                    return new Weapon("Sword", Random.Range(2, 5), Random.Range(0, 3), Random.Range(0, 3), Random.Range(15, 21), 5, ItemType.shortWeapon);
+                    return new Weapon("Sword", Random.Range(2, 5), Random.Range(0, 3), Random.Range(0, 3), Random.Range(15, 21), 5, Sword, ItemType.shortWeapon);
                 case "Gun":
-                    return new Weapon("Gun", Random.Range(1, 3), Random.Range(2, 5), Random.Range(0, 3), Random.Range(10, 16), 5, ItemType.longWeapon);
+                    return new Weapon("Gun", Random.Range(1, 3), Random.Range(2, 5), Random.Range(0, 3), Random.Range(10, 16), 5, Gun, ItemType.longWeapon);
                 case "Boots":
                     return new Clothes("Boots", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Shoes["Boots"], ItemType.shoes);
                 case "Shirts":

@@ -113,7 +113,7 @@ public class GunEnemy : LivingEntity
     }
     public void FixedUpdate()
     {
-        if(targetEntity!=null)
+        if(targetEntity!=null&&!dead)
         transform.LookAt(targetEntity.transform);
     }
 
@@ -198,7 +198,7 @@ public class GunEnemy : LivingEntity
     //유니티 애니메이션 이벤트로 공격 메소드
     public void Fire()
     {
-        Debug.Log("Fire");
+        
     }
 
 
@@ -234,7 +234,7 @@ public class GunEnemy : LivingEntity
         base.Die();
         StartCoroutine(Die_IE());
         //다른 AI를 방해하지 않도록 자신의 모든 콜라이더를 비활성화
-        Collider[] enemyColliders = GetComponents<Collider>();
+        Collider[] enemyColliders = GetComponentsInChildren<Collider>();
         for (int i = 0; i < enemyColliders.Length; i++)
         {
             enemyColliders[i].enabled = false;

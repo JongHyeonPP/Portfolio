@@ -43,9 +43,10 @@ namespace ItemSpace
     public class Weapon : Item
     {
         public float damage;//공격력
-        public Weapon(string _name, int _str, int _con, int _vit, float _damage, float _weight, ItemType _itemType)
+        public GameObject weapon;
+        public Weapon(string _name, int _str, int _con, int _vit, float _damage, float _weight,GameObject _weapon, ItemType _itemType)
         {
-            name = _name; str = _str; con = _con; vit = _vit; damage = _damage; weight = _weight; itemType = _itemType;
+            name = _name; str = _str; con = _con; vit = _vit; damage = _damage; weight = _weight; weapon = _weapon; itemType = _itemType;
         }
     }
 }

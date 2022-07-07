@@ -9,6 +9,7 @@ public class ObjectPoolManager : MonoBehaviour
     private int spawnIdx = 0;
     private int spawnMax = 2;
     [SerializeField] GameObject enemyPrefab;
+    [SerializeField]  Vector3 playerPosition;
     void Awake()
     {
         enemyPool = new List<GameObject>();
@@ -22,6 +23,7 @@ public class ObjectPoolManager : MonoBehaviour
             enemyPool.Add(Instantiate(enemyPrefab,objectPool.transform));
             enemyPool[i].SetActive(false);
         }
+        playerPosition = GameObject.FindWithTag("Player").transform.position;
     }
     private void Start()
     {
@@ -32,16 +34,20 @@ public class ObjectPoolManager : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(1f);
-            for (int i = 0; i < spawnMax; i++)
+            for (int i = 0; i < enemyPool.Count; i++)
             {
                 if (enemyPool[i].activeSelf)
                 {
                     continue;
                 }
+                if (Vector3.Distance(spawnPos[spawnIdx].position, playerPosition) <1f)
+                {
+                    continue;
+                }
                 enemyPool[i].SetActive(true);
-                spawnIdx %= spawnMax;
-
+                
                 enemyPool[i].transform.position = spawnPos[spawnIdx++].position;
+                spawnIdx %= spawnMax;
                 break;
             }
            
