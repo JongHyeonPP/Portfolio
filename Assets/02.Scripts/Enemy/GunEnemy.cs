@@ -52,7 +52,7 @@ public class GunEnemy : LivingEntity
     private bool canMove;
     private bool canAttack;
     Collider[] enemyColliders;
-    private Item[] DropItem;
+    private List<Item> dropItem;
     private void Awake()
     {
         //게임 오브젝트에서 사용할 컴포넌트 가져오기
@@ -71,6 +71,7 @@ public class GunEnemy : LivingEntity
         
         tr = GetComponent<Transform>();
         enemyColliders = GetComponentsInChildren<Collider>();
+        dropItem = new List<Item>();
     }
 
     //적 AI의 초기 스펙을 결정하는 셋업 메서드
@@ -110,6 +111,7 @@ public class GunEnemy : LivingEntity
         }
         rigid.isKinematic = false;
         nav.enabled = true;
+
     }
     public void FixedUpdate()
     {
