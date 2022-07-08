@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
+using System.Linq;
+using ItemSpace;
 // MoveBehaviour inherits from GenericBehaviour. This class corresponds to basic walk and run behaviour, it is the default behaviour.
 public class MoveBehaviour : GenericBehaviour
 {
@@ -24,9 +27,12 @@ public class MoveBehaviour : GenericBehaviour
 	[SerializeField]private GameObject curweapon = null;
 
 	[SerializeField]private RayShoot rayShoot;
+	public Image[] weaponImage = new Image[2];
 	//public GameObject curweapon;
-
+	
+	
 	// Start is always called after any Awake functions.
+	
 	void Start()
 	{
 		behaviourManager.SubscribeBehaviour(this);
@@ -76,7 +82,8 @@ public class MoveBehaviour : GenericBehaviour
 			ani.SetBool("HaveSword", true);
 			StartCoroutine(On(sword));
 			rayShoot.enabled = false;
-
+			weaponImage[0].enabled = false;
+			weaponImage[1].enabled = true;
 		}
 		if (Input.GetKeyDown(KeyCode.Alpha1)&&!haveMotion)
 		{
@@ -87,6 +94,8 @@ public class MoveBehaviour : GenericBehaviour
 			ani.SetBool("HavePistol", true);
 			StartCoroutine(On(pistol));
 			rayShoot.enabled = true;
+			weaponImage[0].enabled = true;
+			weaponImage[1].enabled = false;
 		}
 		if (Input.GetKeyDown(KeyCode.Tab))
 		{
@@ -96,7 +105,9 @@ public class MoveBehaviour : GenericBehaviour
 			ani.SetBool("HaveSword", false);
 			ani.SetBool("HavePistol", false);
 			Off(curweapon);
-			rayShoot.enabled = false;
+			rayShoot.enabled = false; 
+			weaponImage[0].enabled = false;
+			weaponImage[1].enabled = false;
 		}
 
 		if (Input.GetKeyDown(KeyCode.Space)&&!rolling)
@@ -116,6 +127,7 @@ public class MoveBehaviour : GenericBehaviour
 				StartCoroutine(Reload());
 			}
 		}
+		
 	}
 
 	// LocalFixedUpdate overrides the virtual function of the base class.
@@ -280,15 +292,15 @@ public void FixedUpdate()
 	}
 	IEnumerator Roll()
 	{
-		rolling=haveMotion = true;
+		rolling = haveMotion = true;
 		speed = 2;
 		yield return new WaitForSeconds(0.3f);
 		speed = 1;
 		yield return new WaitForSeconds(0.3f);
 		speed = 0;
-		rolling =haveMotion= false;
+		rolling = haveMotion = false;
 
 	}
-
+    
 
 }

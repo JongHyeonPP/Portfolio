@@ -19,11 +19,9 @@ namespace ItemSpace
         public float weight;//무게
         public float durability;//내구도
         public ItemType itemType;
-        public int count;
         public Item()
         {
             durability = 100f;
-            count = 1;
         }
     }
     [System.Serializable]
@@ -43,10 +41,9 @@ namespace ItemSpace
     public class Weapon : Item
     {
         public float damage;//공격력
-        public GameObject weapon;
-        public Weapon(string _name, int _str, int _con, int _vit, float _damage, float _weight,GameObject _weapon, ItemType _itemType)
+        public Weapon(string _name, int _str, int _con, int _vit, float _damage, float _weight, ItemType _itemType)
         {
-            name = _name; str = _str; con = _con; vit = _vit; damage = _damage; weight = _weight; weapon = _weapon; itemType = _itemType;
+            name = _name; str = _str; con = _con; vit = _vit; damage = _damage; weight = _weight; itemType = _itemType;
         }
     }
 }

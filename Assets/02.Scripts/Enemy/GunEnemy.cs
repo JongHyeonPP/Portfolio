@@ -111,7 +111,6 @@ public class GunEnemy : LivingEntity
         }
         rigid.isKinematic = false;
         nav.enabled = true;
-
     }
     public void FixedUpdate()
     {
@@ -234,6 +233,7 @@ public class GunEnemy : LivingEntity
     {
         //LivingEntity의 DIe()를 실행하여 기본 사망 처리 실행
         base.Die();
+        Instantiate(Resources.Load<GameObject>("DropItem"), transform.position, transform.rotation);
         StartCoroutine(Die_IE());
         //다른 AI를 방해하지 않도록 자신의 모든 콜라이더를 비활성화
         Collider[] enemyColliders = GetComponentsInChildren<Collider>();
@@ -264,6 +264,7 @@ public class GunEnemy : LivingEntity
         tr.position = Vector3.zero;            // 포지션 초기화
         tr.rotation = Quaternion.identity;     // 회전 초기화
         rigid.Sleep();                         // 잠시 리지디 바디의 충돌 시뮬레이션을 멈춤.
+        if(GameManager.instance!=null)
         GameManager.instance.gameDataObject.Exp += exp;
     }
 }

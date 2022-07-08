@@ -29,9 +29,9 @@ public class GameDataObject : ScriptableObject//
     public List<Item> top = new List<Item>();
     public List<Item> bottoms = new List<Item>();
     //현재 장착중인 아이템들
-    public Weapon _shortWeapon;
-    public Weapon _longWeapon;
-    public Cloth _shoes;
-    public Cloth _top;
-    public Cloth _bottoms;
+    public Weapon shortWeapon_C;
+    public Weapon longWeapon_C;
+    public Clothes shoes_C;
+    public Clothes top_C;
+    public Clothes bottoms_C;
 }
