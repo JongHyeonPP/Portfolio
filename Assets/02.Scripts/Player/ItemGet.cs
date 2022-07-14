@@ -17,7 +17,6 @@ public class ItemGet : MonoBehaviour
 		{
 			pressF.alpha = 1f;
 		}
-
 	}
     public void Update()
     {
@@ -40,26 +39,10 @@ public class ItemGet : MonoBehaviour
 			if (Input.GetKeyDown(KeyCode.F))
 			{
 				if (!dropUI_Opened)
-				{
-					items = other.GetComponent<DropItem>().items;
-					item_buttons = new GameObject[3];
-					for (int i = 0; i < 3; i++)
-					{
-						if (items[i] != null)
-						{
-							item_buttons[i] = Instantiate(Resources.Load<GameObject>("Drop_Button_Item"), Content);
-							item_buttons[i].transform.GetChild(0).gameObject.GetComponent<Text>().text = items[i].name;
-							item_buttons[i].GetComponent<ItemButton>().Item_index = i;
-						}
-					}
-					dropUI.alpha = 1f;
-					pressF.alpha = 0f;
-					GameManager.instance.Pause(true);
-					Cursor.lockState = CursorLockMode.None;
-					Cursor.visible = true;
-					dropUI_Opened = true;
-				}
-				else
+                {
+                    OpenDrop(other);
+                }
+                else
 				{
 					DropDisable();
 				}
@@ -68,8 +51,32 @@ public class ItemGet : MonoBehaviour
 		}
 	}
 
-	public void DropDisable()
+    private void OpenDrop(Collider other)
+    {
+		GameManager.instance.isPaused = true;
+        items = other.GetComponent<DropItem>().items;
+        item_buttons = new GameObject[3];
+        for (int i = 0; i < 3; i++)
+        {
+            if (items[i] != null)
+            {
+                item_buttons[i] = Instantiate(Resources.Load<GameObject>("Drop_Button_Item"), Content);
+                item_buttons[i].transform.GetChild(0).gameObject.GetComponent<Text>().text = items[i].name;
+                item_buttons[i].GetComponent<ItemButton>().Item_index = i;
+            }
+        }
+        dropUI.alpha = 1f;
+        pressF.alpha = 0f;
+        GameManager.instance.Pause(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        dropUI_Opened = true;
+        dropUI.blocksRaycasts = true;
+    }
+
+    public void DropDisable()
 	{
+		GameManager.instance.isPaused = false;
 		if (item_buttons != null)
 			foreach (var x in item_buttons)
 			{
@@ -81,5 +88,6 @@ public class ItemGet : MonoBehaviour
 		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
 		dropUI_Opened = false;
+		dropUI.blocksRaycasts = false;
 	}
 }

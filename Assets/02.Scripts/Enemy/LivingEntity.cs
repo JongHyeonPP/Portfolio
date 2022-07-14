@@ -11,6 +11,7 @@ public class LivingEntity : GenericBehaviour
     public event Action onDeath; //사망 시 발동할 이벤트
     public bool canDamaged;
 
+
     //생명체가 활성화될 떄 상태를 리셋
     protected virtual void OnEnable()
     {
@@ -27,12 +28,12 @@ public class LivingEntity : GenericBehaviour
         {
             //데미지만큼 체력 감소
             health -= (float)_params[1]; // health = health - damage;
-            Debug.Log(health);
             //체력이 0 이하 && 아직 죽지 않았다면 사망 처리 실행
             if (health <= 0 && !dead)
             {
                 Die();
             }
+            
             StartCoroutine(DamageDelay());
         }
     }
@@ -50,7 +51,6 @@ public class LivingEntity : GenericBehaviour
 
         dead = true;
     }
-
     IEnumerator DamageDelay()
     {
         canDamaged = false;

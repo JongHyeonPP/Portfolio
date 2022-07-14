@@ -10,10 +10,6 @@ public class EquipItem : MonoBehaviour
     public Transform Content;
     public static EquipItem focused;
     public Color origin_color;
-    public Text str;
-    public Text con;
-    public Text vit;
-    public Text dd;
     private void Start()
     {
         origin_color = new Color(115f / 255f, 178f / 255f, 229f / 255f,146f/255f);
@@ -23,15 +19,15 @@ public class EquipItem : MonoBehaviour
         if (focused != null)
             focused.GetComponent<Image>().color = origin_color;
         focused = this;
-        Item temp = GameManager.instance.Items[focused.Item_index];
-
-
+        //Item temp = GameManager.instance.Items[focused.Item_index];
         gameObject.GetComponent<Image>().color = Color.blue;
-        EquipClick();
+        GameManager.instance.ShowInventoryStatus(Item_index);
     }
 
     public void EquipClick()
     {
+        if (GameManager.instance.Items[Item_index] == null)
+            return;
         if (GameManager.instance.Items[Item_index].itemType == ItemType.shortWeapon)
         {
             if (gameDataObject.shortWeapon_C != null)
@@ -84,4 +80,6 @@ public class EquipItem : MonoBehaviour
         GameManager.instance.Items[Item_index] = null;
         Destroy(focused.gameObject);
     }
+
+   
 }

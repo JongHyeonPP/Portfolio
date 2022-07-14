@@ -11,9 +11,7 @@ public class GunEnemy : LivingEntity
     private NavMeshAgent nav; //경로 계산 AI 에이전트
     private float dist; //적과 추적대상과의 거리
     private Rigidbody rigid;
-    private float speed;
     private Animator anim;
-    private float speedDampTime = 0.1f;
     private float exp = 10f;
     /*public ParticleSystem hitEffect; //피격 이펙트
     public AudioClip deathSound;//사망 사운드
@@ -22,7 +20,6 @@ public class GunEnemy : LivingEntity
 
     //스태프
     public GameObject firePoint;
-    private int spawnMax = 2;
     private Animator enemyAnimator;
     //private AudioSource enemyAudioPlayer; //오디오 소스 컴포넌트
 
@@ -52,7 +49,6 @@ public class GunEnemy : LivingEntity
     private bool canMove;
     private bool canAttack;
     Collider[] enemyColliders;
-    private List<Item> dropItem;
     private void Awake()
     {
         //게임 오브젝트에서 사용할 컴포넌트 가져오기
@@ -71,7 +67,6 @@ public class GunEnemy : LivingEntity
         
         tr = GetComponent<Transform>();
         enemyColliders = GetComponentsInChildren<Collider>();
-        dropItem = new List<Item>();
     }
 
     //적 AI의 초기 스펙을 결정하는 셋업 메서드
@@ -89,7 +84,6 @@ public class GunEnemy : LivingEntity
     // Update is called once per frame
     void Update()
     {
-        speed = rigid.velocity.magnitude;
         anim.SetFloat("Speed",nav.velocity.magnitude);
         //추적 대상의 존재 여부에 따라 다른 애니메이션 재생
         enemyAnimator.SetBool("CanMove", canMove);
@@ -199,7 +193,6 @@ public class GunEnemy : LivingEntity
     //유니티 애니메이션 이벤트로 공격 메소드
     public void Fire()
     {
-        
     }
 
 
@@ -226,6 +219,7 @@ public class GunEnemy : LivingEntity
 
         //LivingEntity의 OnDamage()를 실행하여 데미지 적용
         base.OnDamage(_params);
+        GameManager.instance.EnemyHp(health, startHp, this);
     }
 
     //사망 처리

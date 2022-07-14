@@ -10,7 +10,9 @@ namespace ItemSpace
         void Start()
         {
             items = ItemList.instance.GetRandom();
-            Destroy(this, 60f);
+            if (items[0] == null && items[1] == null && items[2] == null)
+                Destroy(gameObject);
+            Destroy(gameObject, 60f);
         }
     }
 }
