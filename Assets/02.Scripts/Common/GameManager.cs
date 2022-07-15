@@ -11,7 +11,13 @@ public class GameManager : MonoBehaviour
     private CanvasGroup inventory;
     private GameObject button_inventory;
     public GameDataObject gameDataObject;
-    public Transform Content;
+    public Transform Content;//인벤토리 스크롤 안의 콘텐트
+    public Transform equiped;//현재 장착 중인 장비들이 있는 Panel
+    public GameObject shortWeapon_C;
+    public GameObject longWeapon_C;
+    public GameObject shoes_C;
+    public GameObject top_C;
+    public GameObject bottoms_C;
     public CanvasGroup get_f;
     public Item[] Items;//인벤토리 배열
     [Header("Player Status in Inventory")]
@@ -19,6 +25,7 @@ public class GameManager : MonoBehaviour
     public Text con;
     public Text vit;
     public Text dd;
+    public Text num;
     [Header("Enemy Hp")]
     public CanvasGroup canvasGroup_hp;
     public Image image_hp;
@@ -30,7 +37,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Items = new Item[100];
-        Cursor.visible=false;
+        Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         button_inventory = GameObject.Find("Button-Inventory");
         inventory = GameObject.Find("Panel-Inventory").GetComponent<CanvasGroup>();
@@ -69,13 +76,16 @@ public class GameManager : MonoBehaviour
         {
             inventory.alpha = 1f;
             Cursor.lockState = CursorLockMode.None;
-            List<GameObject> list_item = new List<GameObject>();
-            int count = 0;
-            count = AddInventory(gameDataObject.shortWeapon ,list_item, count);
-            count = AddInventory(gameDataObject.longWeapon, list_item, count);
-            count = AddInventory(gameDataObject.shoes, list_item, count);
-            count = AddInventory(gameDataObject.top, list_item, count);
-            count = AddInventory(gameDataObject.bottoms, list_item, count);
+            AddInventory(gameDataObject.shortWeapon);
+            AddInventory(gameDataObject.longWeapon);
+            AddInventory(gameDataObject.shoes);
+            AddInventory(gameDataObject.top);
+            AddInventory(gameDataObject.bottoms);
+            AddEquip(shortWeapon_C, gameDataObject.shortWeapon_C);
+            AddEquip(longWeapon_C, gameDataObject.longWeapon_C);
+            AddEquip(shoes_C, gameDataObject.shoes_C);
+            AddEquip(top_C, gameDataObject.top_C);
+            AddEquip(bottoms_C, gameDataObject.bottoms_C);
         }
         else
         {
@@ -88,16 +98,21 @@ public class GameManager : MonoBehaviour
         inventory.interactable = stop;
     }
 
-    private int AddInventory(List<Item> list_item, List<GameObject> list_inventory, int count)
+    private void AddEquip(GameObject _object, Item _item)
+    {
+        _object = Instantiate(Resources.Load<GameObject>("Inventory_Button_Item"), equiped);
+        _object.GetComponent<EquipItem>().item = _item;
+        _object.GetComponentInChildren<Text>().text = _item.name;
+    }
+
+    private void AddInventory(List<Item> list_item)
     {
         for (int i = 0; i < list_item.Count; i++)
         {
-            list_inventory.Add(Instantiate(Resources.Load<GameObject>("Inventory_Button_Item"), Content));
-            list_inventory[list_inventory.Count - 1].transform.GetChild(0).gameObject.GetComponent<Text>().text = list_item[i].name;
-            Items[count] = list_item[i];
-            list_inventory[i].GetComponent<EquipItem>().Item_index = count++;
+            GameObject temp = Instantiate(Resources.Load<GameObject>("Inventory_Button_Item"), Content);
+            temp.GetComponent<EquipItem>().item = list_item[i];
+            temp.GetComponentInChildren<Text>().text = list_item[i].name;
         }
-        return count;
     }
 
     public void EmptyInventory()
@@ -137,12 +152,34 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(3f);
         canvasGroup.alpha = 0f;
     }
-    public void ShowInventoryStatus(int Item_index)
+    public void ShowInventoryStatus(Item item)
     {
-        str.text = string.Format("STR : {0}", Items[Item_index].str.ToString());
-        con.text = string.Format("CON : {0}", Items[Item_index].con.ToString());
-        vit.text = string.Format("VIT : {0}", Items[Item_index].vit.ToString());
-        //Items[Item_index].
-        //dd.text = string.Format("VIT : {0}", Items[Item_index].);
+        str.text = string.Format("STR : {0}", item.str.ToString());
+        con.text = string.Format("CON : {0}", item.con.ToString());
+        vit.text = string.Format("VIT : {0}", item.vit.ToString());
+        Weapon weapon;
+        Clothes clothes;
+        if (item.itemType == ItemType.longWeapon || item.itemType == ItemType.shortWeapon)
+        {
+            weapon = item as Weapon;
+            dd.text = string.Format("DAM : {0}", weapon.damage.ToString());
+        }
+        else
+        {
+            clothes = item as Clothes;
+            dd.text = string.Format("DEF : {0}", clothes.def.ToString());
+        }
+    }
+    public void EquipClick()
+    {
+        if (EquipItem.focused.item.itemType == ItemType.shortWeapon)//여기 하는 중
+        {
+            ChangeEquip(gameDataObject.shortWeapon_C);
+        }
+
+    }
+    private void ChangeEquip(Item equiped_item)
+    {
+        
     }
 }

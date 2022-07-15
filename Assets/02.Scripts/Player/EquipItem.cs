@@ -5,7 +5,7 @@ using ItemSpace;
 using UnityEngine.UI;
 public class EquipItem : MonoBehaviour
 {
-    public int Item_index;
+    public Item item;
     public GameDataObject gameDataObject;
     public Transform Content;
     public static EquipItem focused;
@@ -19,67 +19,7 @@ public class EquipItem : MonoBehaviour
         if (focused != null)
             focused.GetComponent<Image>().color = origin_color;
         focused = this;
-        //Item temp = GameManager.instance.Items[focused.Item_index];
         gameObject.GetComponent<Image>().color = Color.blue;
-        GameManager.instance.ShowInventoryStatus(Item_index);
+        GameManager.instance.ShowInventoryStatus(item);
     }
-
-    public void EquipClick()
-    {
-        if (GameManager.instance.Items[Item_index] == null)
-            return;
-        if (GameManager.instance.Items[Item_index].itemType == ItemType.shortWeapon)
-        {
-            if (gameDataObject.shortWeapon_C != null)
-            {
-                GameObject temp = Instantiate(Resources.Load<GameObject>("Inventory_Button_Item"), Content);
-                temp.transform.GetChild(0).gameObject.GetComponent<Text>().text = gameDataObject.shortWeapon_C.name;
-            }
-            gameDataObject.shortWeapon_C = GameManager.instance.Items[focused.Item_index] as Weapon;
-        }
-
-        if (GameManager.instance.Items[Item_index].itemType == ItemType.longWeapon)
-        {
-            if (gameDataObject.longWeapon_C != null)
-            {
-                GameObject temp = Instantiate(Resources.Load<GameObject>("Inventory_Button_Item"), Content);
-                temp.transform.GetChild(0).gameObject.GetComponent<Text>().text = gameDataObject.longWeapon_C.name;
-            }
-            gameDataObject.longWeapon_C = GameManager.instance.Items[Item_index] as Weapon;
-        }
-
-        if (GameManager.instance.Items[Item_index].itemType == ItemType.shoes)
-        {
-            if (gameDataObject.shoes_C != null)
-            {
-                GameObject temp = Instantiate(Resources.Load<GameObject>("Inventory_Button_Item"), Content);
-                temp.transform.GetChild(0).gameObject.GetComponent<Text>().text = gameDataObject.shoes_C.name;
-            }
-            gameDataObject.shoes_C = GameManager.instance.Items[Item_index] as Clothes;
-        }
-
-        if (GameManager.instance.Items[Item_index].itemType == ItemType.top)
-        {
-            if (gameDataObject.top_C != null)
-            {
-                GameObject temp = Instantiate(Resources.Load<GameObject>("Inventory_Button_Item"), Content);
-                temp.transform.GetChild(0).gameObject.GetComponent<Text>().text = gameDataObject.top_C.name;
-            }
-            gameDataObject.top_C = GameManager.instance.Items[Item_index] as Clothes;
-        }
-
-        if (GameManager.instance.Items[Item_index].itemType == ItemType.bottoms)
-        {
-            if (gameDataObject.bottoms_C != null)
-            {
-                GameObject temp = Instantiate(Resources.Load<GameObject>("Inventory_Button_Item"), Content);
-                temp.transform.GetChild(0).gameObject.GetComponent<Text>().text = gameDataObject.bottoms_C.name;
-            }
-            gameDataObject.bottoms_C = GameManager.instance.Items[Item_index] as Clothes;
-        }
-        GameManager.instance.Items[Item_index] = null;
-        Destroy(focused.gameObject);
-    }
-
-   
 }

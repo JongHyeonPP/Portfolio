@@ -14,7 +14,7 @@ namespace ItemSpace
         public int str;
         public int con;
         public int vit;
-        
+        public int num;
         
         public float weight;//무게
         public float durability;//내구도
