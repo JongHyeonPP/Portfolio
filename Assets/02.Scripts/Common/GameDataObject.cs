@@ -7,21 +7,20 @@ public class GameDataObject : ScriptableObject//
 {
     //능력치들
     public int Level { get; set; } = 1;
-    public int level_max { get; }=30;
+    public int Level_max { get; }=30;
     public float Exp { get; set; }
     public float Exp_require { get; set; } = 10;
     public int Str { get; set; }
-    public int con { get; set; }
-    public int vit{ get; set; }
-    public int status_max { get; } = 30;
-    public int status_own { get; set; } = 7;
-    public float maxHp { get; set; } = 100;
-    public float hp { get; set; } = 100;
-    public float maxHp_default = 100;
-    public float damage { get; set; } = 5;
-    public float weight { get; set; } = 0;
-    public float max_weight { get; } = 100;
-    public float def { get; set; } = 0;
+    public int Con { get; set; }
+    public int Vit{ get; set; }
+    public int Status_max { get; } = 30;
+    public int Status_own { get; set; } = 7;
+    public float MaxHp { get; set; } = 100;
+    public float Hp { get; set; } = 100;
+    public float Damage { get; set; } = 5;
+    public float Weight { get; set; } = 0;
+    public float Max_weight { get; } = 100;
+    public float Def { get; set; } = 0;
     //가진 아이템들
     public List<Item> shortWeapon = new List<Item>();
     public List<Item> longWeapon = new List<Item>();

@@ -17,11 +17,11 @@ public class GameManager : MonoBehaviour
     public Transform equiped_shoes;
     public Transform equiped_top;
     public Transform equiped_bottoms;
-    public GameObject shortWeapon_C;
-    public GameObject longWeapon_C;
-    public GameObject shoes_C;
-    public GameObject top_C;
-    public GameObject bottoms_C;
+    private GameObject shortWeapon_C;//현재 장착 중인 장비 버튼 오브젝트
+    private GameObject longWeapon_C;
+    private GameObject shoes_C;
+    private GameObject top_C;
+    private GameObject bottoms_C;
     public CanvasGroup get_f;
     [Header("Player Status in Inventory")]
     public Text str;
@@ -43,12 +43,13 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         button_inventory = GameObject.Find("Button-Inventory");
         inventory = GameObject.Find("Panel-Inventory").GetComponent<CanvasGroup>();
-        EmptyInventory();
+        Reset();
     }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
+            if(!isPaused)
             Inventory(true);
             
         }
@@ -59,6 +60,7 @@ public class GameManager : MonoBehaviour
     }
     public void Pause(bool stop)
     {
+        isPaused = stop;
         Time.timeScale = (stop) ? 0.0f : 1.0f;
         foreach (var x in GameObject.FindWithTag("Player").GetComponents<GenericBehaviour>())
         {
@@ -78,11 +80,11 @@ public class GameManager : MonoBehaviour
             AddInventory(gameDataObject.shoes);
             AddInventory(gameDataObject.top);
             AddInventory(gameDataObject.bottoms);
-            AddEquip(ItemType.shortWeapon);
-            AddEquip(gameDataObject.longWeapon_C);
-            AddEquip(gameDataObject.shoes_C);
-            AddEquip(gameDataObject.top_C);
-            AddEquip(gameDataObject.bottoms_C);
+            AddEquip(equiped_shortWeapon, gameDataObject.shortWeapon_C, shortWeapon_C);//버튼이 들어갈 부모, 게임 데이터 오브젝트의 정보, 버튼
+            AddEquip(equiped_longWeapon, gameDataObject.longWeapon_C,longWeapon_C);
+            AddEquip(equiped_shoes, gameDataObject.shoes_C, shoes_C);
+            AddEquip(equiped_top, gameDataObject.top_C, top_C);
+            AddEquip(equiped_bottoms, gameDataObject.bottoms_C, bottoms_C);
         }
         else
         {
@@ -95,14 +97,18 @@ public class GameManager : MonoBehaviour
         inventory.interactable = stop;
     }
 
-    private void AddEquip(ItemType itemType)
+    private void AddEquip(Transform parent, Item item_c, GameObject item_button)
     {
-        GameObject temp = Instantiate(Resources.Load<GameObject>("Equip_Button_Item"), parent);
-        temp.GetComponent<EquipedItem>().item = gameDataObject.shortWeapon_C;
-        temp.GetComponentInChildren<Text>().text = list_item[i].name;
-    }
+        if (item_button != null)
+        {
+            item_button = Instantiate(Resources.Load<GameObject>("Inventory_Button_Item"), parent);
+            item_button.GetComponent<EquipItem>().item = item_c;
+            item_button.GetComponentInChildren<Text>().text = item_c.name;
+        }
+        }
 
-    private void AddInventory(List<Item> list_item)
+
+        private void AddInventory(List<Item> list_item)
     {
         for (int i = 0; i < list_item.Count; i++)
         {
@@ -112,18 +118,33 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void EmptyInventory()
+    public void Reset()
     {
         gameDataObject.shortWeapon.Clear();
         gameDataObject.longWeapon.Clear();
         gameDataObject.shoes.Clear();
         gameDataObject.top.Clear();
         gameDataObject.bottoms.Clear();
+
         gameDataObject.shortWeapon_C = null;
         gameDataObject.longWeapon_C = null;
         gameDataObject.shoes_C = null;
         gameDataObject.top_C = null;
         gameDataObject.bottoms_C = null;
+
+        gameDataObject.Level = 1;
+        gameDataObject.Exp = 0;
+        gameDataObject.Exp_require = 10;
+        gameDataObject.Str = 0;
+        gameDataObject.Con = 0;
+        gameDataObject.Vit = 0;
+        gameDataObject.Status_own = 7;
+        gameDataObject.Hp = 100;
+        gameDataObject.MaxHp = 100;
+        gameDataObject.Damage = 5;
+        gameDataObject.Weight = 0;
+        gameDataObject.Def = 0;
+
     }
     public void EnemyHp(float health, float startHp, LivingEntity livingEntity)
     {
@@ -169,50 +190,116 @@ public class GameManager : MonoBehaviour
     }
     public void EquipClick()
     {
+        if(EquipItem.focused!=null)
+            if(!EquipItem.focused.isEquiped)
             ChangeEquip(EquipItem.focused.item.itemType);
     }
     private void ChangeEquip(ItemType itemType)
     {
-        //부모를 바꾸기만 하면 안되고 스크립트 상에서도 변수를 교환해줘야 함.
-        //1.focused에 있는 item을 GameDataObject의 C에 넣고 C에 있는걸 GameDataObject의 리스트에 넣는다.
-        //2.현재 스크립트의 C에 focused의 gameObject가 들어간다.
-        //3.focused에 색을 origin으로 바꾸고 focused에 null을 준다.
+        //장착 중인게 있을 때와 없을 때를 구분해줘야함.
         switch (itemType)
         {
             case ItemType.shortWeapon:
-                shortWeapon_C.transform.SetParent(Content);//장착된 장비의 버튼을 인벤토리로 옮긴다.
+                if (shortWeapon_C != null)
+                {
+                    gameDataObject.shortWeapon.Add(gameDataObject.shortWeapon_C);//데이터오브젝트
+                    shortWeapon_C.transform.SetParent(Content);//장착된 장비의 버튼을 인벤토리로 옮긴다.
+                    EquipItem temp = shortWeapon_C.GetComponent<EquipItem>();
+                    temp.isEquiped = false;
+                    gameDataObject.Str -= temp.item.str;
+                    gameDataObject.Con -= temp.item.con;
+                    gameDataObject.Vit -= temp.item.vit;
+                }
                 EquipItem.focused.transform.SetParent(equiped_shortWeapon);//인벤토리에서 누른 장비의 버튼을 장착칸으로 옮긴다.
-                gameDataObject.shortWeapon.Add(gameDataObject.shortWeapon_C);//데이터오브젝트
                 gameDataObject.shortWeapon_C = EquipItem.focused.item as Weapon;//데이터오브젝트
                 shortWeapon_C = EquipItem.focused.gameObject;//장비 칸에 들어갈 게임 오브젝트를 변수에 대입
+                EquipItem.focused.isEquiped = true;
+                gameDataObject.Str += EquipItem.focused.item.str;
+                gameDataObject.Con += EquipItem.focused.item.con;
+                gameDataObject.Vit += EquipItem.focused.item.vit;
                 break;
+
             case ItemType.longWeapon:
-                longWeapon_C.transform.SetParent(Content);
+                if (longWeapon_C != null)
+                {
+                    gameDataObject.longWeapon.Add(gameDataObject.longWeapon_C);
+                    longWeapon_C.transform.SetParent(Content);
+                    EquipItem temp = longWeapon_C.GetComponent<EquipItem>();
+                    temp.isEquiped = false;
+                    gameDataObject.Str -= temp.item.str;
+                    gameDataObject.Con -= temp.item.con;
+                    gameDataObject.Vit -= temp.item.vit;
+                }
                 EquipItem.focused.transform.SetParent(equiped_longWeapon);
-                gameDataObject.longWeapon.Add(gameDataObject.longWeapon_C);
                 gameDataObject.longWeapon_C = EquipItem.focused.item as Weapon;
                 longWeapon_C = EquipItem.focused.gameObject;
+                EquipItem.focused.isEquiped = true;
+                gameDataObject.Str += EquipItem.focused.item.str;
+                gameDataObject.Con += EquipItem.focused.item.con;
+                gameDataObject.Vit += EquipItem.focused.item.vit;
                 break;
+
             case ItemType.shoes:
-                shoes_C.transform.SetParent(Content);
+                if (shoes_C != null)
+                {
+                    gameDataObject.shoes.Add(gameDataObject.shoes_C);
+                    shoes_C.transform.SetParent(Content);
+                    shoes_C.GetComponent<EquipItem>().isEquiped = false;
+                    EquipItem temp = shoes_C.GetComponent<EquipItem>();
+                    temp.isEquiped = false;
+                    gameDataObject.Str -= temp.item.str;
+                    gameDataObject.Con -= temp.item.con;
+                    gameDataObject.Vit -= temp.item.vit;
+                }
                 EquipItem.focused.transform.SetParent(equiped_shoes);
-                gameDataObject.shoes.Add(gameDataObject.shoes_C);
                 gameDataObject.shoes_C = EquipItem.focused.item as Clothes;
                 shoes_C = EquipItem.focused.gameObject;
+                EquipItem.focused.isEquiped = true;
+                gameDataObject.Str += EquipItem.focused.item.str;
+                gameDataObject.Con += EquipItem.focused.item.con;
+                gameDataObject.Vit += EquipItem.focused.item.vit;
                 break;
+
             case ItemType.top:
-                top_C.transform.SetParent(Content);
+                if (top_C != null)
+                {
+                    gameDataObject.top.Add(gameDataObject.top_C);
+                    top_C.transform.SetParent(Content);
+                    top_C.GetComponent<EquipItem>().isEquiped = false;
+                    EquipItem temp = top_C.GetComponent<EquipItem>();
+                    temp.isEquiped = false;
+                    gameDataObject.Str -= temp.item.str;
+                    gameDataObject.Con -= temp.item.con;
+                    gameDataObject.Vit -= temp.item.vit;
+                }
                 EquipItem.focused.transform.SetParent(equiped_top);
-                gameDataObject.top.Add(gameDataObject.top_C);
                 gameDataObject.top_C = EquipItem.focused.item as Clothes;
                 top_C = EquipItem.focused.gameObject;
+                EquipItem.focused.isEquiped = true;
+                gameDataObject.Str += EquipItem.focused.item.str;
+                gameDataObject.Con += EquipItem.focused.item.con;
+                gameDataObject.Vit += EquipItem.focused.item.vit;
                 break;
+
             case ItemType.bottoms:
-                bottoms_C.transform.SetParent(Content);
+                if (bottoms_C != null)
+                {
+                    gameDataObject.bottoms.Add(gameDataObject.bottoms_C);
+                    bottoms_C.transform.SetParent(Content);
+                    bottoms_C.GetComponent<EquipItem>().isEquiped = false;
+                    EquipItem temp = bottoms_C.GetComponent<EquipItem>();
+                    temp.isEquiped = false;
+                    gameDataObject.Str -= temp.item.str;
+                    gameDataObject.Con -= temp.item.con;
+                    gameDataObject.Vit -= temp.item.vit;
+                }
                 EquipItem.focused.transform.SetParent(equiped_bottoms);
-                gameDataObject.bottoms.Add(gameDataObject.bottoms_C);
                 gameDataObject.bottoms_C = EquipItem.focused.item as Clothes;
                 bottoms_C = EquipItem.focused.gameObject;
+                EquipItem.focused.isEquiped = true;
+                gameDataObject.Str += EquipItem.focused.item.str;
+                gameDataObject.Con += EquipItem.focused.item.con;
+                gameDataObject.Vit += EquipItem.focused.item.vit;
                 break;
         }
         EquipItem.focused.GetComponent<Image>().color = EquipItem.focused.origin_color;

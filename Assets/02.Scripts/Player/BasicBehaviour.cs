@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class BasicBehaviour : MonoBehaviour
 {
 	public Transform playerCamera;                        // Reference to the camera that focus the player.
-	public float turnSmoothing = 0.06f;                   // Speed of turn when moving to match camera facing.
+	public float turnSmoothing = 0f;                   // Speed of turn when moving to match camera facing.
 	public float sprintFOV = 100f;                        // the FOV to use on the camera when player is sprinting.
 	public string sprintButton = "Sprint";                // Default sprint button input name.
 
