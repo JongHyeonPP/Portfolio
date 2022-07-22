@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ItemSpace;
 [CreateAssetMenu(fileName = "GameDataSO", menuName = "Create GameData", order = 0)]
-public class GameDataObject : ScriptableObject//
+public class GameDataObject : ScriptableObject
 {
     //능력치들
     public int Level { get; set; } = 1;
@@ -17,7 +17,7 @@ public class GameDataObject : ScriptableObject//
     public int Status_own { get; set; } = 7;
     public float MaxHp { get; set; } = 100;
     public float Hp { get; set; } = 100;
-    public float Damage { get; set; } = 5;
+    public float Dam { get; set; } = 5;
     public float Weight { get; set; } = 0;
     public float Max_weight { get; } = 100;
     public float Def { get; set; } = 0;

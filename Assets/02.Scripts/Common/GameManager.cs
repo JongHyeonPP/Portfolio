@@ -8,10 +8,12 @@ public class GameManager : MonoBehaviour
 {
     public bool isPaused = false;
     public static GameManager instance;
-    private CanvasGroup inventory;
+    private CanvasGroup group_inventory;
+    private CanvasGroup group_status;
     private GameObject button_inventory;
     public GameDataObject gameDataObject;
     public Transform Content;//인벤토리 스크롤 안의 콘텐트
+    [Header("Equiped Item Panel")]
     public Transform equiped_shortWeapon;//현재 장착 중인 장비들이 있는 Panel
     public Transform equiped_longWeapon;
     public Transform equiped_shoes;
@@ -22,13 +24,21 @@ public class GameManager : MonoBehaviour
     private GameObject shoes_C;
     private GameObject top_C;
     private GameObject bottoms_C;
-    public CanvasGroup get_f;
+    public CanvasGroup get_F;
+    private List<GameObject> list_inventory;//일괄 destroy를 위한 리스트
+    private bool[] isnum;
     [Header("Player Status in Inventory")]
-    public Text str;
-    public Text con;
-    public Text vit;
-    public Text dd;
-    public Text num;
+    public Text str_I;
+    public Text con_I;
+    public Text vit_I;
+    public Text dd_I;
+    [Header("Player Status in Status")]
+    public Text level_S;
+    public Text str_S;
+    public Text con_S;
+    public Text vit_S;
+    public Text dam_S;
+    public Text def_S;
     [Header("Enemy Hp")]
     public CanvasGroup canvasGroup_hp;
     public Image image_hp;
@@ -42,20 +52,27 @@ public class GameManager : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         button_inventory = GameObject.Find("Button-Inventory");
-        inventory = GameObject.Find("Panel-Inventory").GetComponent<CanvasGroup>();
-        Reset();
+        group_inventory = GameObject.Find("Panel-Inventory").GetComponent<CanvasGroup>();
+        group_status = GameObject.Find("Panel-Status").GetComponent<CanvasGroup>();
+        list_inventory = new List<GameObject>();
+        isnum = new bool[100];
     }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
             if(!isPaused)
-            Inventory(true);
-            
+            Inventory(true); 
+        }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            if (!isPaused)
+                Status(true);
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Inventory(false);
+            Status(false);
         }
     }
     public void Pause(bool stop)
@@ -72,8 +89,8 @@ public class GameManager : MonoBehaviour
     {
         if (stop)
         {
-            get_f.alpha = 0f;
-            inventory.alpha = 1f;
+            get_F.alpha = 0f;
+            group_inventory.alpha = 1f;
             Cursor.lockState = CursorLockMode.None;
             AddInventory(gameDataObject.shortWeapon);
             AddInventory(gameDataObject.longWeapon);
@@ -88,15 +105,45 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            inventory.alpha = 0f;
+            group_inventory.alpha = 0f;
             Cursor.lockState = CursorLockMode.Locked;
         }
         button_inventory.SetActive(!stop);
         Cursor.visible = stop;
         Pause(stop);
-        inventory.interactable = stop;
+        group_inventory.interactable = stop;
     }
-
+    public void Status(bool stop)
+    {
+        if (stop)
+        {
+            isPaused = true;
+            get_F.alpha = 0f;
+            group_status.alpha = 1f;
+            Cursor.lockState = CursorLockMode.None;
+            level_S.text = string.Format("LV : {0}", gameDataObject.Level.ToString());
+            str_S.text = string.Format("STR : {0}", gameDataObject.Str.ToString());
+            con_S.text = string.Format("CON : {0}", gameDataObject.Con.ToString());
+            vit_S.text = string.Format("VIT : {0}", gameDataObject.Vit.ToString());
+            dam_S.text = string.Format("DAM : {0}", gameDataObject.Dam.ToString());
+            def_S.text = string.Format("DEF : {0}", gameDataObject.Def.ToString());
+        }
+        else
+        {
+            group_status.alpha = 0f;
+            Cursor.lockState = CursorLockMode.Locked;
+            group_status.interactable = false;
+            foreach (GameObject o in list_inventory)
+            {
+                Destroy(o);
+            }
+            list_inventory.Clear();
+        }
+        group_status.interactable = stop;
+        group_status.blocksRaycasts = stop;
+        Cursor.visible = stop;
+        Pause(stop);
+    }
     private void AddEquip(Transform parent, Item item_c, GameObject item_button)
     {
         if (item_button != null)
@@ -115,9 +162,9 @@ public class GameManager : MonoBehaviour
             GameObject temp = Instantiate(Resources.Load<GameObject>("Inventory_Button_Item"), Content);
             temp.GetComponent<EquipItem>().item = list_item[i];
             temp.GetComponentInChildren<Text>().text = list_item[i].name;
+            list_inventory.Add(temp);
         }
     }
-
     public void Reset()
     {
         gameDataObject.shortWeapon.Clear();
@@ -141,7 +188,7 @@ public class GameManager : MonoBehaviour
         gameDataObject.Status_own = 7;
         gameDataObject.Hp = 100;
         gameDataObject.MaxHp = 100;
-        gameDataObject.Damage = 5;
+        gameDataObject.Dam = 5;
         gameDataObject.Weight = 0;
         gameDataObject.Def = 0;
 
@@ -172,20 +219,20 @@ public class GameManager : MonoBehaviour
     }
     public void ShowInventoryStatus(Item item)
     {
-        str.text = string.Format("STR : {0}", item.str.ToString());
-        con.text = string.Format("CON : {0}", item.con.ToString());
-        vit.text = string.Format("VIT : {0}", item.vit.ToString());
+        str_I.text = string.Format("STR : {0}", item.str.ToString());
+        con_I.text = string.Format("CON : {0}", item.con.ToString());
+        vit_I.text = string.Format("VIT : {0}", item.vit.ToString());
         Weapon weapon;
         Clothes clothes;
         if (item.itemType == ItemType.longWeapon || item.itemType == ItemType.shortWeapon)
         {
             weapon = item as Weapon;
-            dd.text = string.Format("DAM : {0}", weapon.damage.ToString());
+            dd_I.text = string.Format("DAM : {0}", weapon.damage.ToString());
         }
         else
         {
             clothes = item as Clothes;
-            dd.text = string.Format("DEF : {0}", clothes.def.ToString());
+            dd_I.text = string.Format("DEF : {0}", clothes.def.ToString());
         }
     }
     public void EquipClick()
@@ -200,7 +247,7 @@ public class GameManager : MonoBehaviour
         switch (itemType)
         {
             case ItemType.shortWeapon:
-                if (shortWeapon_C != null)
+                if (shortWeapon_C != null)//장착 중인게 있을 때
                 {
                     gameDataObject.shortWeapon.Add(gameDataObject.shortWeapon_C);//데이터오브젝트
                     shortWeapon_C.transform.SetParent(Content);//장착된 장비의 버튼을 인벤토리로 옮긴다.
@@ -217,6 +264,7 @@ public class GameManager : MonoBehaviour
                 gameDataObject.Str += EquipItem.focused.item.str;
                 gameDataObject.Con += EquipItem.focused.item.con;
                 gameDataObject.Vit += EquipItem.focused.item.vit;
+                gameDataObject.shortWeapon.Remove(EquipItem.focused.item);
                 break;
 
             case ItemType.longWeapon:
@@ -304,5 +352,17 @@ public class GameManager : MonoBehaviour
         }
         EquipItem.focused.GetComponent<Image>().color = EquipItem.focused.origin_color;
         EquipItem.focused = null;
+    }
+    public int GetItemNum()
+    {
+        for (int i = 0; i < isnum.Length; i++)
+        {
+            if (!isnum[i])
+            {
+                isnum[i] = true;
+                return i;
+            }
+        }
+        return -1;
     }
 }

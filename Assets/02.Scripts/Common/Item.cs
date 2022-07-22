@@ -30,7 +30,7 @@ namespace ItemSpace
             public DynamicCharacterAvatar Avatar;
             public UMATextRecipe Recipe;
             public float def;//방어도
-            public Clothes(string _name, int _str, int _con, int _vit, float _def, float _weight, UMATextRecipe _Recipe, ItemType _itemType)//이름, 능력치, 텍스쳐, 부위()
+            public Clothes(string _name, int _str, int _con, int _vit, float _def, float _weight, UMATextRecipe _Recipe, ItemType _itemType, int num)//이름, 능력치, 텍스쳐, 부위()
             {
                 itemType = _itemType;
                 Avatar = GameObject.FindGameObjectWithTag("Player").GetComponent<DynamicCharacterAvatar>();
@@ -41,7 +41,7 @@ namespace ItemSpace
     public class Weapon : Item
     {
         public float damage;//공격력
-        public Weapon(string _name, int _str, int _con, int _vit, float _damage, float _weight, ItemType _itemType)
+        public Weapon(string _name, int _str, int _con, int _vit, float _damage, float _weight, ItemType _itemType, int num)
         {
             name = _name; str = _str; con = _con; vit = _vit; damage = _damage; weight = _weight; itemType = _itemType;
         }
