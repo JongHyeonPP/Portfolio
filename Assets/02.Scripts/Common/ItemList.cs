@@ -77,72 +77,69 @@ namespace ItemSpace
         {
             Item[] item= new Item[3];
             int randint = Random.Range(0, 5);
-            int num = GameManager.instance.GetItemNum();
             switch (randint)
             {
                 case 0:
-                    item[0]=new Weapon("Sword", Random.Range(2, 5), Random.Range(0, 3), Random.Range(0, 3), Random.Range(15, 21), 5, ItemType.shortWeapon, num);
+                    item[0]=new Weapon("Sword", Random.Range(2, 5), Random.Range(0, 3), Random.Range(0, 3), Random.Range(15, 21), 5, ItemType.shortWeapon);
                     break;
                 case 1:
-                    item[0]= new Weapon("Axe", Random.Range(2, 5), Random.Range(0, 3), Random.Range(0, 3), Random.Range(15, 21), 5, ItemType.shortWeapon, num);
+                    item[0]= new Weapon("Axe", Random.Range(2, 5), Random.Range(0, 3), Random.Range(0, 3), Random.Range(15, 21), 5, ItemType.shortWeapon);
                     break;
                 case 2:
-                    item[0] = new Weapon("Pistol", Random.Range(1, 3), Random.Range(2, 5), Random.Range(0, 3), Random.Range(10, 16), 5, ItemType.longWeapon, num);
+                    item[0] = new Weapon("Pistol", Random.Range(1, 3), Random.Range(2, 5), Random.Range(0, 3), Random.Range(10, 16), 5, ItemType.longWeapon);
                     break;
                 case 3:
-                    item[0] = new Weapon("Revolver", Random.Range(1, 3), Random.Range(2, 5), Random.Range(0, 3), Random.Range(10, 16), 5, ItemType.longWeapon, num);
+                    item[0] = new Weapon("Revolver", Random.Range(1, 3), Random.Range(2, 5), Random.Range(0, 3), Random.Range(10, 16), 5, ItemType.longWeapon);
                     break;
                 default:
                     item[0] = null;
                     break;
             }
             randint = Random.Range(0, 8);
-            num = GameManager.instance.GetItemNum();
             switch (randint)
             {
                 case 0:
-                    item[1] = new Clothes("Boots", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Shoes["Boots"], ItemType.shoes,num );
+                    item[1] = new Clothes("Boots", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Shoes["Boots"], ItemType.shoes);
                     break;
                 case 1:
-                    item[1] = new Clothes("Sneakers", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Shoes["Sneakers"], ItemType.shoes, num);
+                    item[1] = new Clothes("Sneakers", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Shoes["Sneakers"], ItemType.shoes);
                     break;
                 case 2:
-                    item[1] = new Clothes("Shirts", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Top["Shirts"], ItemType.top, num);
+                    item[1] = new Clothes("Shirts", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Top["Shirts"], ItemType.top);
                     break;
                 case 3:
-                    item[1] = new Clothes("Coat", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Top["Coat"], ItemType.top, num);
+                    item[1] = new Clothes("Coat", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Top["Coat"], ItemType.top);
                     break;
                 case 4:
-                    item[1] = new Clothes("Pants", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Bottoms["Pants"], ItemType.bottoms, num);
+                    item[1] = new Clothes("Pants", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Bottoms["Pants"], ItemType.bottoms);
                     break;
                 case 5:
-                    item[1] = new Clothes("Jeans", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Bottoms["Jeans"], ItemType.bottoms, num);
+                    item[1] = new Clothes("Jeans", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Bottoms["Jeans"], ItemType.bottoms);
                     break;
                 default:
                     item[1] = null;
                     break;
             }
             randint = Random.Range(0, 8);
-            num = GameManager.instance.GetItemNum();
             switch (randint)
             {
                 case 0:
-                    item[2] = new Clothes("Boots", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Shoes["Boots"], ItemType.shoes, num);
+                    item[2] = new Clothes("Boots", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Shoes["Boots"], ItemType.shoes);
                     break;
                 case 1:
-                    item[2] = new Clothes("Sneakers", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Shoes["Sneakers"], ItemType.shoes, num);
+                    item[2] = new Clothes("Sneakers", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Shoes["Sneakers"], ItemType.shoes);
                     break;
                 case 2:
-                    item[2] = new Clothes("Shirts", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Top["Shirts"], ItemType.top, num);
+                    item[2] = new Clothes("Shirts", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Top["Shirts"], ItemType.top);
                     break;
                 case 3:
-                    item[2] = new Clothes("Coat", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Top["Coat"], ItemType.top, num);
+                    item[2] = new Clothes("Coat", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Top["Coat"], ItemType.top);
                     break;
                 case 4:
-                    item[2] = new Clothes("Pants", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Bottoms["Pants"], ItemType.bottoms, num);
+                    item[2] = new Clothes("Pants", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Bottoms["Pants"], ItemType.bottoms);
                     break;
                 case 5:
-                    item[2] = new Clothes("Jeans", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Bottoms["Jeans"], ItemType.bottoms, num);
+                    item[2] = new Clothes("Jeans", Random.Range(1, 3), Random.Range(1, 3), Random.Range(1, 3), Random.Range(7, 10), 3, Bottoms["Jeans"], ItemType.bottoms);
                     break;
                 default:
                     item[2] = null;

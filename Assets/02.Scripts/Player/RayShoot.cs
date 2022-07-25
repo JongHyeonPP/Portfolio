@@ -9,16 +9,19 @@ public class RayShoot : MonoBehaviour
     [SerializeField] private Transform FirePos_R;
     [SerializeField] private Transform FirePos_L;
     [SerializeField] private Transform FirePos_Cur;
+    [SerializeField] private MoveBehaviour moveBehaviour;
     void Start()
     {
         FirePos_Cur = FirePos_R;
+        moveBehaviour = GetComponent<MoveBehaviour>();
     }
 
     void Update()
     {
         Debug.DrawRay(FirePos_Cur.position, FirePos_Cur.forward * 25f, Color.green);
-        if (Input.GetMouseButtonDown(0)&&AimBehaviourBasic.aim)
+        if (moveBehaviour.curweapon ==moveBehaviour.pistol&& AimBehaviourBasic.aim)
         {
+            if(Input.GetMouseButtonDown(0))
             Fire();
         }
     }

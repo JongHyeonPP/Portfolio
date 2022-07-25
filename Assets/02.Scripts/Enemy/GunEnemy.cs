@@ -12,7 +12,7 @@ public class GunEnemy : LivingEntity
     private float dist; //적과 추적대상과의 거리
     private Rigidbody rigid;
     private Animator anim;
-    private float exp = 10f;
+    private float exp = 3f;
     /*public ParticleSystem hitEffect; //피격 이펙트
     public AudioClip deathSound;//사망 사운드
     public AudioClip hitSound; //피격 사운드
@@ -242,11 +242,11 @@ public class GunEnemy : LivingEntity
         nav.enabled = false;
         //사망 애니메이션 재생
         enemyAnimator.SetTrigger("Die");
-        
+
         /*//사망 효과음 재생
         enemyAudioPlayer.PlayOnShot(deathSound);
         */
-
+        GameManager.instance.UpdateExp(exp);
     }
     IEnumerator Die_IE()
     {

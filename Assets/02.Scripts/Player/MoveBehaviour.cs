@@ -24,7 +24,7 @@ public class MoveBehaviour : GenericBehaviour
 	
 	public GameObject pistol;
 	public GameObject sword;
-	[SerializeField]private GameObject curweapon = null;
+	public GameObject curweapon = null;
 
 	[SerializeField]private RayShoot rayShoot;
 	public Image[] weaponImage = new Image[2];

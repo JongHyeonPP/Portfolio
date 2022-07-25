@@ -19,6 +19,7 @@ public class EquipItem : MonoBehaviour
             focused.GetComponent<Image>().color = origin_color;
         focused = this;
         gameObject.GetComponent<Image>().color = Color.blue;
+        if(item!=null)
         GameManager.instance.ShowInventoryStatus(item);
     }
 }
